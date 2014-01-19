@@ -16,11 +16,13 @@
 package org.terasology.persistence;
 
 import com.google.common.collect.Lists;
+
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.nio.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Before;
 import org.junit.Test;
+import org.terasology.HeadlessEnvironment;
 import org.terasology.TerasologyTestingEnvironment;
 import org.terasology.asset.AssetManager;
 import org.terasology.classMetadata.reflect.ReflectionReflectFactory;
@@ -50,6 +52,7 @@ import org.terasology.world.block.loader.WorldAtlas;
 import org.terasology.world.chunks.internal.ChunkImpl;
 
 import javax.vecmath.Vector3f;
+
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.util.List;
@@ -64,7 +67,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Immortius
  */
-public class StorageManagerTest extends TerasologyTestingEnvironment {
+public class StorageManagerTest extends HeadlessEnvironment {
 
     public static final String PLAYER_ID = "someId";
     public static final Vector3i CHUNK_POS = new Vector3i(1, 2, 3);
@@ -83,7 +86,7 @@ public class StorageManagerTest extends TerasologyTestingEnvironment {
         PathManager.getInstance().useOverrideHomePath(vfs.getPath(""));
         PathManager.getInstance().setCurrentSaveTitle("testSave");
 
-        assert !Files.isRegularFile(vfs.getPath("global.dat"));
+        assertFalse(Files.isRegularFile(vfs.getPath("global.dat")));
 
         moduleManager = new ModuleManagerImpl(new ModuleSecurityManager());
         networkSystem = mock(NetworkSystem.class);
