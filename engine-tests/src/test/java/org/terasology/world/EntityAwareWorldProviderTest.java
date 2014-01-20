@@ -69,7 +69,7 @@ import org.terasology.world.block.family.BlockFamily;
 import org.terasology.world.block.family.DefaultBlockFamilyFactoryRegistry;
 import org.terasology.world.block.family.HorizontalBlockFamily;
 import org.terasology.world.block.family.SymmetricFamily;
-import org.terasology.world.block.loader.WorldAtlas;
+import org.terasology.world.block.loader.WorldAtlasImpl;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.internal.BlockManagerImpl;
 import org.terasology.world.internal.EntityAwareWorldProvider;
@@ -122,7 +122,7 @@ public class EntityAwareWorldProviderTest {
 
         CoreRegistry.put(ComponentSystemManager.class, mock(ComponentSystemManager.class));
 
-        blockManager = CoreRegistry.put(BlockManager.class, new BlockManagerImpl(mock(WorldAtlas.class), new DefaultBlockFamilyFactoryRegistry()));
+        blockManager = CoreRegistry.put(BlockManager.class, new BlockManagerImpl(mock(WorldAtlasImpl.class), new DefaultBlockFamilyFactoryRegistry()));
         NetworkSystem networkSystem = mock(NetworkSystem.class);
         when(networkSystem.getMode()).thenReturn(NetworkMode.NONE);
         entityManager = builder.build(moduleManager, networkSystem, new ReflectionReflectFactory());

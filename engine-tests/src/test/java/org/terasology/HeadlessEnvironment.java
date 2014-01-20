@@ -25,7 +25,6 @@ import java.security.CodeSource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.nio.file.ShrinkWrapFileSystems;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.mockito.Mockito;
 import org.terasology.asset.AssetFactory;
 import org.terasology.asset.AssetManager;
 import org.terasology.asset.AssetType;
@@ -64,6 +63,7 @@ import org.terasology.world.block.family.AlignToSurfaceFamilyFactory;
 import org.terasology.world.block.family.DefaultBlockFamilyFactoryRegistry;
 import org.terasology.world.block.family.HorizontalBlockFamilyFactory;
 import org.terasology.world.block.internal.BlockManagerImpl;
+import org.terasology.world.block.loader.NullWorldAtlas;
 import org.terasology.world.block.loader.WorldAtlas;
 import org.terasology.world.block.shapes.BlockShape;
 import org.terasology.world.block.shapes.BlockShapeData;
@@ -126,7 +126,7 @@ public class HeadlessEnvironment extends Environment {
         DefaultBlockFamilyFactoryRegistry blockFamilyFactoryRegistry = new DefaultBlockFamilyFactoryRegistry();
         blockFamilyFactoryRegistry.setBlockFamilyFactory("horizontal", new HorizontalBlockFamilyFactory());
         blockFamilyFactoryRegistry.setBlockFamilyFactory("alignToSurface", new AlignToSurfaceFamilyFactory());
-        WorldAtlas worldAtlas = mock(WorldAtlas.class, Mockito.RETURNS_DEEP_STUBS);
+        WorldAtlas worldAtlas = new NullWorldAtlas();
         BlockManagerImpl blockManager = new BlockManagerImpl(worldAtlas, blockFamilyFactoryRegistry);
         CoreRegistry.put(BlockManager.class, blockManager);
     }

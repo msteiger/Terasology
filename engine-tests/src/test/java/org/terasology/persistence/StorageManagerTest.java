@@ -48,7 +48,7 @@ import org.terasology.world.block.BlockUri;
 import org.terasology.world.block.family.DefaultBlockFamilyFactoryRegistry;
 import org.terasology.world.block.family.SymmetricFamily;
 import org.terasology.world.block.internal.BlockManagerImpl;
-import org.terasology.world.block.loader.WorldAtlas;
+import org.terasology.world.block.loader.WorldAtlasImpl;
 import org.terasology.world.chunks.internal.ChunkImpl;
 
 import javax.vecmath.Vector3f;
@@ -93,7 +93,7 @@ public class StorageManagerTest extends HeadlessEnvironment {
         when(networkSystem.getMode()).thenReturn(NetworkMode.NONE);
         entityManager = new EntitySystemBuilder().build(moduleManager, networkSystem, new ReflectionReflectFactory());
 
-        BlockManagerImpl blockManager = CoreRegistry.put(BlockManager.class, new BlockManagerImpl(mock(WorldAtlas.class), new DefaultBlockFamilyFactoryRegistry()));
+        BlockManagerImpl blockManager = CoreRegistry.put(BlockManager.class, new BlockManagerImpl(mock(WorldAtlasImpl.class), new DefaultBlockFamilyFactoryRegistry()));
         testBlock = new Block();
         blockManager.addBlockFamily(new SymmetricFamily(new BlockUri("test:testblock"), testBlock), true);
 

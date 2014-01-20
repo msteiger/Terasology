@@ -47,6 +47,7 @@ import org.terasology.world.block.loader.WorldAtlas;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
+
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.Iterator;
