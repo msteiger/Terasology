@@ -37,14 +37,9 @@ import org.terasology.asset.AssetUri;
 import org.terasology.asset.sources.ClasspathSource;
 import org.terasology.audio.AudioManager;
 import org.terasology.audio.nullAudio.NullAudioManager;
-import org.terasology.classMetadata.reflect.ReflectionReflectFactory;
+import org.terasology.reflection.reflect.ReflectionReflectFactory;
 import org.terasology.config.Config;
-import org.terasology.engine.ComponentSystemManager;
-import org.terasology.engine.CoreRegistry;
-import org.terasology.engine.EngineTime;
-import org.terasology.engine.TerasologyConstants;
-import org.terasology.engine.TerasologyEngine;
-import org.terasology.engine.Time;
+import org.terasology.engine.*;
 import org.terasology.engine.bootstrap.EntitySystemBuilder;
 import org.terasology.engine.modes.loadProcesses.LoadPrefabs;
 import org.terasology.engine.module.ModuleManager;
@@ -60,6 +55,7 @@ import org.terasology.network.internal.NetworkSystemImpl;
 import org.terasology.persistence.StorageManager;
 import org.terasology.persistence.internal.StorageManagerInternal;
 import org.terasology.physics.CollisionGroupManager;
+import org.terasology.registry.CoreRegistry;
 import org.terasology.rendering.ShaderManager;
 import org.terasology.rendering.assets.animation.MeshAnimation;
 import org.terasology.rendering.assets.animation.MeshAnimationData;
@@ -78,18 +74,14 @@ import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.assets.texture.TextureData;
 import org.terasology.rendering.nui.skin.UISkin;
 import org.terasology.rendering.nui.skin.UISkinData;
-import org.terasology.rendering.opengl.GLSLMaterial;
-import org.terasology.rendering.opengl.GLSLShader;
-import org.terasology.rendering.opengl.OpenGLFont;
-import org.terasology.rendering.opengl.OpenGLMesh;
-import org.terasology.rendering.opengl.OpenGLSkeletalMesh;
-import org.terasology.rendering.opengl.OpenGLTexture;
+import org.terasology.rendering.opengl.*;
 import org.terasology.utilities.LWJGLHelper;
 import org.terasology.world.block.BlockManager;
-import org.terasology.world.block.family.AlignToSurfaceFamilyFactory;
+import org.terasology.world.block.family.AttachedToSurfaceFamilyFactory;
 import org.terasology.world.block.family.DefaultBlockFamilyFactoryRegistry;
 import org.terasology.world.block.family.HorizontalBlockFamilyFactory;
 import org.terasology.world.block.internal.BlockManagerImpl;
+import org.terasology.world.block.loader.WorldAtlas;
 import org.terasology.world.block.loader.WorldAtlasImpl;
 import org.terasology.world.block.shapes.BlockShape;
 import org.terasology.world.block.shapes.BlockShapeData;
@@ -135,6 +127,18 @@ public abstract class TerasologyTestingEnvironment {
             collisionGroupManager = CoreRegistry.get(CollisionGroupManager.class);
             moduleManager = CoreRegistry.get(ModuleManager.class);
 
+            DefaultBlockFamilyFactoryRegistry blockFamilyFactoryRegistry = new DefaultBlockFamilyFactoryRegistry();
+            blockFamilyFactoryRegistry.setBlockFamilyFactory("horizontal", new HorizontalBlockFamilyFactory());
+            blockFamilyFactoryRegistry.setBlockFamilyFactory("alignToSurface", new AttachedToSurfaceFamilyFactory());
+            blockManager = new BlockManagerImpl(new WorldAtlasImpl(4096), blockFamilyFactoryRegistry);
+            CoreRegistry.put(BlockManager.class, blockManager);
+
+            audioManager = new NullAudioManager();
+
+            CoreRegistry.put(AudioManager.class, audioManager);
+
+            collisionGroupManager = new CollisionGroupManager();
+            CoreRegistry.put(CollisionGroupManager.class, collisionGroupManager);
         } else {
             CoreRegistry.put(AssetManager.class, assetManager);
             CoreRegistry.put(BlockManager.class, blockManager);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 MovingBlocks
+ * Copyright 2014 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.terasology.config;
 
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
-import org.terasology.engine.CoreRegistry;
+import org.terasology.registry.CoreRegistry;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.network.events.ChangeViewRangeRequest;
 import org.terasology.rendering.world.ViewDistance;
@@ -31,7 +31,7 @@ public class RenderingConfig {
     private PixelFormat pixelFormat = new PixelFormat().withDepthBits(24);
     private int windowPosX = -1;
     private int windowPosY = -1;
-    private int windowWidth = 1280;
+    private int windowWidth = 1152;
     private int windowHeight = 720;
     private boolean fullscreen;
     private ViewDistance viewDistance = ViewDistance.NEAR;

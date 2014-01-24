@@ -19,7 +19,7 @@ import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.ComponentSystem;
-import org.terasology.entitySystem.systems.In;
+import org.terasology.registry.In;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.inventory.InventoryComponent;
 import org.terasology.logic.inventory.InventoryManager;
@@ -85,8 +85,6 @@ public class PlayerStartingInventorySystem implements ComponentSystem {
         inventoryManager.giveItem(player, entityManager.create("core:railgunTool"));
         inventoryManager.giveItem(player, entityManager.create("core:miniaturizer"));
         inventoryManager.giveItem(player, chest);
-        inventoryManager.giveItem(player, blockFactory.newInstance(blockManager.getBlockFamily("core:OakSapling"), 10));
-
     }
 
     @Override
