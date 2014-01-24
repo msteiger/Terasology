@@ -34,7 +34,7 @@ import org.terasology.audio.AudioManager;
 import org.terasology.audio.nullAudio.NullAudioManager;
 import org.terasology.config.Config;
 import org.terasology.engine.ComponentSystemManager;
-import org.terasology.engine.CoreRegistry;
+import org.terasology.registry.CoreRegistry;
 import org.terasology.engine.EngineTime;
 import org.terasology.engine.TerasologyConstants;
 import org.terasology.engine.TerasologyEngine;
