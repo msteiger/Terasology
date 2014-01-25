@@ -19,11 +19,11 @@ package org.terasology.world.block.items;
 import org.terasology.asset.Assets;
 import org.terasology.audio.AudioManager;
 import org.terasology.audio.events.PlaySoundEvent;
-import org.terasology.engine.CoreRegistry;
+import org.terasology.registry.CoreRegistry;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.ComponentSystem;
-import org.terasology.entitySystem.systems.In;
+import org.terasology.registry.In;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.common.ActivateEvent;
@@ -36,6 +36,7 @@ import org.terasology.physics.Physics;
 import org.terasology.physics.StandardCollisionGroup;
 import org.terasology.world.BlockEntityRegistry;
 import org.terasology.world.WorldProvider;
+import org.terasology.world.block.entity.placement.PlaceBlocks;
 import org.terasology.world.block.Block;
 import org.terasology.world.block.BlockComponent;
 import org.terasology.world.block.family.BlockFamily;
@@ -79,7 +80,13 @@ public class BlockItemSystem implements ComponentSystem {
         Side surfaceSide = Side.inDirection(event.getHitNormal());
         Side secondaryDirection = TeraMath.getSecondaryPlacementDirection(event.getDirection(), event.getHitNormal());
 
-        Vector3i targetBlock = event.getTarget().getComponent(BlockComponent.class).getPosition();
+        BlockComponent blockComponent = event.getTarget().getComponent(BlockComponent.class);
+        if (blockComponent == null) {
+            // If there is no block there (i.e. it's a BlockGroup, we don't allow placing block, try somewhere else)
+            event.consume();
+            return;
+        }
+        Vector3i targetBlock = blockComponent.getPosition();
         Vector3i placementPos = new Vector3i(targetBlock);
         placementPos.add(surfaceSide.getVector3i());
 
@@ -88,12 +95,12 @@ public class BlockItemSystem implements ComponentSystem {
         if (canPlaceBlock(block, targetBlock, placementPos)) {
             // TODO: Fix this for changes.
             if (networkSystem.getMode().isAuthority()) {
-                if (worldProvider.setBlock(placementPos, block) == null) {
-                    // Something changed the block on another thread, cancel
-                    event.consume();
-                    return;
-                } else {
+                PlaceBlocks placeBlocks = new PlaceBlocks(placementPos, block, event.getInstigator());
+                worldProvider.getWorldEntity().send(placeBlocks);
+                if (!placeBlocks.isConsumed()) {
                     item.send(new OnBlockItemPlaced(placementPos, blockEntityRegistry.getBlockEntityAt(placementPos)));
+                } else {
+                    event.consume();
                 }
             }
             event.getInstigator().send(new PlaySoundEvent(event.getInstigator(), Assets.getSound("engine:PlaceBlock"), 0.5f));

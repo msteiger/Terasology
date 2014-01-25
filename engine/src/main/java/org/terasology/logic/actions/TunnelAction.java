@@ -20,7 +20,7 @@ import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.ComponentSystem;
-import org.terasology.entitySystem.systems.In;
+import org.terasology.registry.In;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.common.ActivateEvent;
@@ -110,7 +110,7 @@ public class TunnelAction implements ComponentSystem {
                         }
                         if (random.nextInt(4) == 0) {
                             EntityRef blockEntity = blockEntityRegistry.getEntityAt(blockPos);
-                            blockEntity.send(new DoDamageEvent(1000, EngineDamageTypes.EXPLOSIVE.get(), EntityRef.NULL));
+                            blockEntity.send(new DoDamageEvent(1000, EngineDamageTypes.EXPLOSIVE.get()));
                         }
 
                         blockCounter--;

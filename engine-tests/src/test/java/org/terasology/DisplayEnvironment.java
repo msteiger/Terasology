@@ -25,7 +25,7 @@ import org.terasology.asset.AssetType;
 import org.terasology.asset.AssetUri;
 import org.terasology.asset.sources.ClasspathSource;
 import org.terasology.config.Config;
-import org.terasology.engine.CoreRegistry;
+import org.terasology.registry.CoreRegistry;
 import org.terasology.engine.TerasologyConstants;
 import org.terasology.engine.TerasologyEngine;
 import org.terasology.engine.module.ModuleManager;
@@ -58,7 +58,7 @@ import org.terasology.rendering.opengl.OpenGLSkeletalMesh;
 import org.terasology.rendering.opengl.OpenGLTexture;
 import org.terasology.utilities.LWJGLHelper;
 import org.terasology.world.block.BlockManager;
-import org.terasology.world.block.family.AlignToSurfaceFamilyFactory;
+import org.terasology.world.block.family.AttachedToSurfaceFamilyFactory;
 import org.terasology.world.block.family.DefaultBlockFamilyFactoryRegistry;
 import org.terasology.world.block.family.HorizontalBlockFamilyFactory;
 import org.terasology.world.block.internal.BlockManagerImpl;
@@ -169,7 +169,7 @@ public class DisplayEnvironment extends HeadlessEnvironment {
 
         DefaultBlockFamilyFactoryRegistry blockFamilyFactoryRegistry = new DefaultBlockFamilyFactoryRegistry();
         blockFamilyFactoryRegistry.setBlockFamilyFactory("horizontal", new HorizontalBlockFamilyFactory());
-        blockFamilyFactoryRegistry.setBlockFamilyFactory("alignToSurface", new AlignToSurfaceFamilyFactory());
+        blockFamilyFactoryRegistry.setBlockFamilyFactory("attachedToSurface", new AttachedToSurfaceFamilyFactory());
         BlockManagerImpl blockManager = new BlockManagerImpl(new WorldAtlasImpl(4096), blockFamilyFactoryRegistry);
         CoreRegistry.put(BlockManager.class, blockManager);
     }

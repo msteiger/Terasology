@@ -25,7 +25,7 @@ import org.terasology.entitySystem.entity.EntityBuilder;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.ComponentSystem;
-import org.terasology.entitySystem.systems.In;
+import org.terasology.registry.In;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.inventory.events.ItemDroppedEvent;
@@ -61,10 +61,12 @@ public class ItemPickupSystem implements ComponentSystem {
     public void onBump(CollideEvent event, EntityRef entity) {
         PickupComponent pickupComponent = entity.getComponent(PickupComponent.class);
         if (inventoryManager.giveItem(event.getOtherEntity(), pickupComponent.itemEntity)) {
+            event.getOtherEntity().send(new PlaySoundForOwnerEvent(Assets.getSound("engine:Loot"), 1.0f));
+            event.getOtherEntity().send(new PickedUpItem(pickupComponent.itemEntity));
+
             pickupComponent.itemEntity = EntityRef.NULL;
             entity.saveComponent(pickupComponent);
             entity.destroy();
-            event.getOtherEntity().send(new PlaySoundForOwnerEvent(Assets.getSound("engine:Loot"), 1.0f));
         }
     }
 
@@ -112,7 +114,6 @@ public class ItemPickupSystem implements ComponentSystem {
             }
         }
     }
-
 
     @Override
     public void shutdown() {

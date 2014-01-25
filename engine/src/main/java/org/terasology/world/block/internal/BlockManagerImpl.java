@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.asset.AssetManager;
 import org.terasology.asset.Assets;
-import org.terasology.engine.CoreRegistry;
+import org.terasology.registry.CoreRegistry;
 import org.terasology.engine.module.Module;
 import org.terasology.engine.module.ModuleManager;
 import org.terasology.entitySystem.entity.EntityRef;
@@ -147,7 +147,7 @@ public class BlockManagerImpl extends BlockManager {
     }
 
     private byte getNextId() {
-        if (nextId >= MAX_ID) {
+        if (nextId > MAX_ID) {
             return UNKNOWN_ID;
         }
         return (byte) nextId++;

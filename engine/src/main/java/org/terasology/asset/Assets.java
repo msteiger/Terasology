@@ -17,16 +17,17 @@
 package org.terasology.asset;
 
 import org.terasology.audio.Sound;
-import org.terasology.engine.CoreRegistry;
+import org.terasology.registry.CoreRegistry;
 import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.rendering.assets.TextureRegion;
+import org.terasology.logic.behavior.asset.BehaviorTree;
+import org.terasology.rendering.assets.texture.TextureRegion;
 import org.terasology.rendering.assets.animation.MeshAnimation;
 import org.terasology.rendering.assets.font.Font;
 import org.terasology.rendering.assets.material.Material;
 import org.terasology.rendering.assets.mesh.Mesh;
 import org.terasology.rendering.assets.shader.Shader;
 import org.terasology.rendering.assets.skeletalmesh.SkeletalMesh;
-import org.terasology.rendering.assets.subtexture.Subtexture;
+import org.terasology.rendering.assets.texture.subtexture.Subtexture;
 import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.nui.skin.UISkin;
 
@@ -74,11 +75,17 @@ public final class Assets {
     }
 
     public static Asset get(AssetType type, String uri) {
-        return CoreRegistry.get(AssetManager.class).resolveAndLoad(type, uri);
+        if (uri != null && !uri.isEmpty()) {
+            return CoreRegistry.get(AssetManager.class).resolveAndLoad(type, uri);
+        }
+        return null;
     }
 
     public static <T extends Asset> T get(AssetType type, String uri, Class<T> assetClass) {
-        return CoreRegistry.get(AssetManager.class).resolveAndLoad(type, uri, assetClass);
+        if (uri != null && !uri.isEmpty()) {
+            return CoreRegistry.get(AssetManager.class).resolveAndLoad(type, uri, assetClass);
+        }
+        return null;
     }
 
     /**
@@ -278,6 +285,10 @@ public final class Assets {
 
     public static Prefab getPrefab(String simpleUri) {
         return get(AssetType.PREFAB, simpleUri, Prefab.class);
+    }
+
+    public static BehaviorTree getBehaviorTree(String simpleUri) {
+        return get(AssetType.BEHAVIOR, simpleUri, BehaviorTree.class);
     }
 
     public static UISkin getSkin(String uri) {

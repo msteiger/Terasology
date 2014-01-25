@@ -17,7 +17,7 @@
 package org.terasology.rendering.nui.mainMenu;
 
 import org.terasology.engine.GameEngine;
-import org.terasology.entitySystem.systems.In;
+import org.terasology.registry.In;
 import org.terasology.rendering.nui.UIScreenLayer;
 import org.terasology.rendering.nui.UIWidget;
 import org.terasology.rendering.nui.WidgetUtil;
@@ -63,11 +63,17 @@ public class MainMenuScreen extends UIScreenLayer {
                 getManager().pushScreen("engine:settingsMenuScreen");
             }
         });
-
         WidgetUtil.trySubscribe(this, "exit", new ActivateEventListener() {
             @Override
             public void onActivated(UIWidget button) {
                 engine.shutdown();
+            }
+        });
+
+        WidgetUtil.trySubscribe(this, "migtest", new ActivateEventListener() {
+            @Override
+            public void onActivated(UIWidget button) {
+                getManager().pushScreen("engine:migTestScreen");
             }
         });
     }
