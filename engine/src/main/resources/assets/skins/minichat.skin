@@ -6,7 +6,7 @@
             "text-align-vertical": "bottom",
             "text-shadowed": false,
 
-            "background" : "engine:area",
+            "background" : "skin:area",
             "background-border" : {
                 "top" : 4,
                 "bottom" : 4,

@@ -35,6 +35,7 @@ import org.terasology.module.sandbox.APIScanner;
 import org.terasology.module.sandbox.BytecodeInjector;
 import org.terasology.module.sandbox.ModuleSecurityManager;
 import org.terasology.module.sandbox.ModuleSecurityPolicy;
+import org.terasology.naming.Name;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -82,19 +83,39 @@ public class ModuleManager {
         scanner.getModuleLoader().setModuleInfoPath(TerasologyConstants.MODULE_INFO_FILENAME);
         scanner.scan(registry, PathManager.getInstance().getModulePaths());
 
+        // create a "symbolic link" for the default skin
+        Module skinMod = registry.getLatestModuleVersion(new Name("skin-default"));
+        Module virtModule = new DelegateModule(skinMod) {
+            @Override
+            public Name getId() {
+                return new Name("skin");
+            }
+        };
+        // make all modules depend on the selected skin
+        DependencyInfo skinDep = new DependencyInfo();
+        skinDep.setId(virtModule.getId());
+        skinDep.setMinVersion(virtModule.getVersion());
+        skinDep.setMaxVersion(virtModule.getVersion().getNextPatchVersion());
+
+        engineModule.getMetadata().getDependencies().add(skinDep);
+
+        // make all modules depend on engine
         DependencyInfo engineDep = new DependencyInfo();
         engineDep.setId(engineModule.getId());
         engineDep.setMinVersion(engineModule.getVersion());
         engineDep.setMaxVersion(engineModule.getVersion().getNextPatchVersion());
 
+
         for (Module mod : registry) {
-            if (mod != engineModule) {
+            if (mod != engineModule && mod != skinMod) {
                 mod.getMetadata().getDependencies().add(engineDep);
             }
         }
 
+        registry.add(virtModule);
+
         setupSandbox();
-        loadEnvironment(Sets.newHashSet(engineModule), true);
+        loadEnvironment(Sets.newHashSet(virtModule, engineModule), true);
     }
 
     private void setupSandbox() {

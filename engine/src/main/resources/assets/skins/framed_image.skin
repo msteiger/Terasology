@@ -2,7 +2,7 @@
     "inherit": "default",
     "elements": {
         "UIImage" : {
-            "background" : "engine:box",
+            "background" : "skin:box",
             "background-border" : {
                 "top" : 4,
                 "bottom" : 4,

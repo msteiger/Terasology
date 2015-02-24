@@ -1,0 +1,6 @@
+{
+    "id" : "skin-default",
+    "version" : "0.49.1",
+    "displayName" : "The default UI skin",
+    "description" : "This module defines the default UI skin for Terasology"
+}

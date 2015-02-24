@@ -64,6 +64,7 @@ extensions
 !/facades/PC
 !/facades/subprojects.gradle
 /modules/*
+!/modules/skin-default
 !/modules/Core
 !/modules/CoreSampleGameplay
 !/modules/subprojects.gradle

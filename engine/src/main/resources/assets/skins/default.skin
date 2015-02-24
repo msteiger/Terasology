@@ -6,7 +6,7 @@
             "text-align-vertical" : "top"
         },
         "UITooltip" : {
-            "background" : "engine:area",
+            "background" : "skin:area",
             "background-border" : {
                 "top" : 4,
                 "bottom" : 4,
@@ -24,7 +24,7 @@
             "text-align-horizontal" : "left"
         },
         "InventoryCell" : {
-            "background" : "engine:box",
+            "background" : "skin:box",
             "background-border" : {
                 "top" : 4,
                 "bottom" : 4,
@@ -39,7 +39,7 @@
             },
             "modes" : {
                 "active" : {
-                    "background" : "engine:boxActive"
+                    "background" : "skin:boxActive"
                 }
             }
         },
@@ -57,7 +57,7 @@
         "UIText" : {
             "text-align-horizontal" : "left",
             "text-align-vertical" : "top",
-            "background" : "engine:box",
+            "background" : "skin:box",
             "background-border" : {
                 "top" : 4,
                 "bottom" : 4,
@@ -77,7 +77,7 @@
         "RowLayout" : {
         },
         "UIBox" : {
-            "background" : "engine:area",
+            "background" : "skin:area",
             "background-border" : {
                 "top" : 4,
                 "bottom" : 4,
@@ -92,7 +92,7 @@
             }
         },
         "UILoadBar" : {
-            "background" : "engine:area",
+            "background" : "skin:area",
             "background-border" : {
                 "top" : 4,
                 "bottom" : 4,
@@ -250,24 +250,24 @@
             }
         },
         "UICheckbox" : {
-            "background" : "engine:checkbox",
+            "background" : "skin:checkbox",
             "fixed-width" : 24,
             "fixed-height" : 24,
             "align-horizontal" : "left",
             "modes" : {
                 "hover" : {
-                    "background" : "engine:checkboxHover"
+                    "background" : "skin:checkboxHover"
                 },
                 "active" : {
-                    "background" : "engine:checkboxChecked"
+                    "background" : "skin:checkboxChecked"
                 },
                 "hover-active" : {
-                    "background" : "engine:checkboxCheckedHover"
+                    "background" : "skin:checkboxCheckedHover"
                 }
             }
         },
         "ScrollableArea" : {
-            "background" : "engine:box",
+            "background" : "skin:box",
             "background-border" : {
                 "top" : 4,
                 "bottom" : 4,
@@ -288,7 +288,7 @@
             "fixed-width" : 16,
             "parts" : {
                 "slider" : {
-                    "background" : "engine:sliderTrack",
+                    "background" : "skin:sliderTrack",
                     "fixed-width" : 8,
                     "background-border" : {
                         "top" : 3,
@@ -298,7 +298,7 @@
                     }
                 },
                 "handle" : {
-                    "background" : "engine:handle",
+                    "background" : "skin:handle",
                     "fixed-width" : 16,
                     "fixed-height" : 16
                 }
@@ -310,7 +310,7 @@
             "fixed-height" : 32,
             "parts" : {
                 "slider" : {
-                    "background" : "engine:sliderTrack",
+                    "background" : "skin:sliderTrack",
                     "fixed-height" : 8,
                     "min-width" : 8,
                     "background-border" : {
@@ -321,7 +321,7 @@
                     }
                 },
                 "ticker" : {
-                    "background" : "engine:box",
+                    "background" : "skin:box",
                     "fixed-height" : 32,
                     "background-border" : {
                         "top" : 4,
@@ -337,7 +337,7 @@
                     },
                     "modes" : {
                         "active" : {
-                            "background" : "engine:boxActive"
+                            "background" : "skin:boxActive"
                         }
                     }
                 }
@@ -349,7 +349,7 @@
             "fixed-height" : 32,
             "parts" : {
                 "slider" : {
-                    "background" : "engine:sliderTrack",
+                    "background" : "skin:sliderTrack",
                     "fixed-height" : 8,
                     "min-width" : 8,
                     "background-border" : {
@@ -360,7 +360,7 @@
                     }
                 },
                 "tickerLeft" : {
-                    "background" : "engine:box",
+                    "background" : "skin:box",
                     "fixed-height" : 32,
                     "background-border" : {
                         "top" : 4,
@@ -376,12 +376,12 @@
                     },
                     "modes" : {
                         "active" : {
-                            "background" : "engine:boxActive"
+                            "background" : "skin:boxActive"
                         }
                     }
                 },
                 "tickerRight" : {
-                    "background" : "engine:box",
+                    "background" : "skin:box",
                     "fixed-height" : 32,
                     "background-border" : {
                         "top" : 4,
@@ -397,7 +397,7 @@
                     },
                     "modes" : {
                         "active" : {
-                            "background" : "engine:boxActive"
+                            "background" : "skin:boxActive"
                         }
                     }
                 }
