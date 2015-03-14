@@ -56,7 +56,7 @@ public class JoinGameScreen extends CoreScreenLayer {
     private GameEngine engine;
 
     private UIList<ServerInfo> serverList;
-    
+
     @Override
     public void initialise() {
         serverList = find("serverList", UIList.class);
@@ -93,12 +93,18 @@ public class JoinGameScreen extends CoreScreenLayer {
                 }
             });
             WidgetUtil.trySubscribe(this, "edit", new ActivateEventListener() {
-                @Override
-                public void onActivated(UIWidget button) {
-                    AddServerPopup popup = getManager().pushScreen(AddServerPopup.ASSET_URI, AddServerPopup.class);
-                    popup.setServerInfo(infoBinding.get());
-                }
-            });
+                    @Override
+                    public void onActivated(UIWidget button) {
+//                        AddServerPopup popup = getManager().pushScreen(AddServerPopup.ASSET_URI, AddServerPopup.class);
+//                        popup.setServerInfo(infoBinding.get());
+                        ServerInfo item = serverList.getSelection();
+                        try {
+                            networkSystem.requestInfo(item.getAddress(), item.getPort());
+                        } catch (InterruptedException e) {
+                            // ignore
+                        }
+                    }
+                });
             WidgetUtil.trySubscribe(this, "remove", new ActivateEventListener() {
                 @Override
                 public void onActivated(UIWidget button) {
@@ -167,7 +173,7 @@ public class JoinGameScreen extends CoreScreenLayer {
             @Override
             public Void apply(JoinStatus result) {
                 if (result.getStatus() != JoinStatus.Status.FAILED) {
-                    engine.changeState(new StateLoading(result));               
+                    engine.changeState(new StateLoading(result));
                 } else {
                     MessagePopup screen = getManager().pushScreen(MessagePopup.ASSET_URI, MessagePopup.class);
                     screen.setMessage("Failed to Join", "Could not connect to server - " + result.getErrorMessage());
