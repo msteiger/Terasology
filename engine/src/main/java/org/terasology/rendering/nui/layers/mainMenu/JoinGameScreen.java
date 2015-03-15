@@ -95,14 +95,8 @@ public class JoinGameScreen extends CoreScreenLayer {
             WidgetUtil.trySubscribe(this, "edit", new ActivateEventListener() {
                     @Override
                     public void onActivated(UIWidget button) {
-//                        AddServerPopup popup = getManager().pushScreen(AddServerPopup.ASSET_URI, AddServerPopup.class);
-//                        popup.setServerInfo(infoBinding.get());
-                        ServerInfo item = serverList.getSelection();
-                        try {
-                            networkSystem.requestInfo(item.getAddress(), item.getPort());
-                        } catch (InterruptedException e) {
-                            // ignore
-                        }
+                        AddServerPopup popup = getManager().pushScreen(AddServerPopup.ASSET_URI, AddServerPopup.class);
+                        popup.setServerInfo(infoBinding.get());
                     }
                 });
             WidgetUtil.trySubscribe(this, "remove", new ActivateEventListener() {
