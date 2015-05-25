@@ -15,6 +15,14 @@
  */
 package org.terasology.rendering.nui.layers.mainMenu;
 
+import java.beans.PropertyChangeListener;
+import java.nio.ByteBuffer;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Callable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.asset.Assets;
@@ -33,6 +41,7 @@ import org.terasology.module.ModuleEnvironment;
 import org.terasology.module.ResolutionResult;
 import org.terasology.naming.Name;
 import org.terasology.registry.CoreRegistry;
+import org.terasology.reflection.metadata.FieldMetadata;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.texture.Texture;
 import org.terasology.rendering.assets.texture.TextureData;
@@ -57,11 +66,6 @@ import org.terasology.world.generator.WorldGenerator;
 import org.terasology.world.generator.internal.WorldGeneratorManager;
 import org.terasology.world.generator.plugin.TempWorldGeneratorPluginLibrary;
 import org.terasology.world.generator.plugin.WorldGeneratorPluginLibrary;
-
-import java.nio.ByteBuffer;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
 
 /**
  * Shows a preview of the generated world and provides some
@@ -184,7 +188,20 @@ public class PreviewWorldScreen extends CoreScreenLayer {
             }
         }
 
-        PropertyProvider provider = new PropertyProvider();
+        Set<PropertyChangeListener> listeners = Collections.singleton(worldConfig);
+        PropertyProvider provider = new PropertyProvider() {
+            @Override
+            protected <T> Binding<T> createTextBinding(Object target, FieldMetadata<Object, T> fieldMetadata) {
+                Binding<T> binding = super.createTextBinding(target, fieldMetadata);
+                return new PropertyChangeBinding<T>(binding, target, fieldMetadata.getField(), listeners);
+            }
+
+            @Override
+            protected Binding<Float> createFloatBinding(Object target, FieldMetadata<Object, ?> fieldMetadata) {
+                Binding<Float> binding = super.createFloatBinding(target, fieldMetadata);
+                return new PropertyChangeBinding<>(binding, target, fieldMetadata.getField(), listeners);
+            }
+        };
 
         for (String label : params.keySet()) {
             Component target = params.get(label);

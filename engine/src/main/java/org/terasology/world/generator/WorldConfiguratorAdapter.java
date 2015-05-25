@@ -15,6 +15,7 @@
  */
 package org.terasology.world.generator;
 
+import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.Map;
 
@@ -32,6 +33,11 @@ public class WorldConfiguratorAdapter implements WorldConfigurator {
 
     @Override
     public void setProperty(String key, Component comp) {
+        // simply ignore
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
         // simply ignore
     }
 }

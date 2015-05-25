@@ -15,6 +15,7 @@
  */
 package org.terasology.world.generator;
 
+import java.beans.PropertyChangeListener;
 import java.util.Map;
 
 import org.terasology.entitySystem.Component;
@@ -23,7 +24,7 @@ import org.terasology.entitySystem.Component;
  * Allows for configuration of world generators.
  * @author Martin Steiger
  */
-public interface WorldConfigurator  {
+public interface WorldConfigurator extends PropertyChangeListener {
 
     /**
      * The values are supposed to be annotated with {@link org.terasology.rendering.nui.properties.Property}
