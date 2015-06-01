@@ -53,7 +53,7 @@ def slurper = new JsonSlurper()
 def moduleConfig = slurper.parseText(moduleFile.text)
 for (dependency in moduleConfig.dependencies) {
     if (dependency.id != 'engine') {
-        moduleDepends += dependency.id
+        moduleDepends += dependency
     }
 }
 
@@ -92,7 +92,7 @@ dependencies {
         if (moduleDepends.size() > 0) {
             println "* $project.name has extra dependencies:"
             moduleDepends.each {
-                println "** $it"
+                println "** $it.id"
             }
         } else {
             println "* No extra dependencies"
@@ -113,9 +113,10 @@ dependencies {
                 compile project(':modules:' + dependency)
             } else {
                 println "*** Seeking as binary: " + dependency
-                // The '+' is satisfied by any version. "changing" triggers better checking for updated snapshots
                 // TODO: When version handling and promotion is in then we can probably ignore snapshots in normal cases
-                compile(group: 'org.terasology.modules', name: dependency, version: '+', changing: true)
+                def lower = "[$dependency.minVersion"
+                def upper = dependency.maxVersion ? dependency.maxVersion + "[" : ")";
+                compile(group: 'org.terasology.modules', name: dependency.id, version: "$lower, $upper", changing: true)
             }
         }
 
