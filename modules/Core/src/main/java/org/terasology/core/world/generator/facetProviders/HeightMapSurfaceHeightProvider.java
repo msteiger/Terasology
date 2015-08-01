@@ -15,6 +15,8 @@
  */
 package org.terasology.core.world.generator.facetProviders;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -26,6 +28,7 @@ import org.terasology.entitySystem.Component;
 import org.terasology.math.TeraMath;
 import org.terasology.math.Vector2i;
 import org.terasology.rendering.assets.texture.Texture;
+import org.terasology.rendering.nui.properties.OneOf.List;
 import org.terasology.rendering.nui.properties.Range;
 import org.terasology.world.generation.Border3D;
 import org.terasology.world.generation.ConfigurableFacetProvider;
@@ -41,7 +44,7 @@ import com.google.common.math.IntMath;
 
 @Produces(SurfaceHeightFacet.class)
 @Requires(@Facet(SeaLevelFacet.class))
-public class HeightMapSurfaceHeightProvider implements ConfigurableFacetProvider {
+public class HeightMapSurfaceHeightProvider implements ConfigurableFacetProvider, PropertyChangeListener {
 
     public enum WrapMode {
         CLAMP,
@@ -155,14 +158,20 @@ public class HeightMapSurfaceHeightProvider implements ConfigurableFacetProvider
         this.configuration = (HeightMapConfiguration) configuration;
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String fieldName = HeightMapConfiguration.class.getName() + ".heightMap";
+        if (fieldName.equals(evt.getPropertyName())) {
+            initialize();
+        }
+    }
+
     private static class HeightMapConfiguration implements Component {
 
         @Enum(description = "Wrap Mode")
         private WrapMode wrapMode = WrapMode.REPEAT;
 
-        // Changing the terrain asset after initialize() is not yet supported
-        // TODO: add notification system so that WorldGens can reload data when necessary
-//        @List(items = { "platec_heightmap", "opposing_islands" }, description = "Height Map")
+        @List(items = { "platec_heightmap", "opposing_islands" }, description = "Height Map")
         private String heightMap = "platec_heightmap";
 
         @Range(min = 0, max = 50f, increment = 1f, precision = 0, description = "Height Offset")

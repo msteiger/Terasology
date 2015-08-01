@@ -105,6 +105,7 @@ public class ModuleManagerImpl implements ModuleManager {
         permissionProviderFactory.getBasePermissionSet().addAPIPackage("java.lang.invoke");
         permissionProviderFactory.getBasePermissionSet().addAPIPackage("java.lang.ref");
         permissionProviderFactory.getBasePermissionSet().addAPIPackage("java.math");
+        permissionProviderFactory.getBasePermissionSet().addAPIPackage("java.beans");
         permissionProviderFactory.getBasePermissionSet().addAPIPackage("java.util");
         permissionProviderFactory.getBasePermissionSet().addAPIPackage("java.util.concurrent");
         permissionProviderFactory.getBasePermissionSet().addAPIPackage("java.util.concurrent.atomic");

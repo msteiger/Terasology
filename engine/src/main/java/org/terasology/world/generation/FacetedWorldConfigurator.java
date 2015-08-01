@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.terasology.entitySystem.Component;
 import org.terasology.world.generator.WorldConfigurator;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +35,9 @@ public class FacetedWorldConfigurator implements WorldConfigurator {
     private final Map<String, Component> properties = Maps.newHashMap();
 
     private final List<ConfigurableFacetProvider> providers;
+    private final List<PropertyChangeListener> changeListeners;
 
-    public FacetedWorldConfigurator(List<ConfigurableFacetProvider> providersList) {
+    public FacetedWorldConfigurator(List<ConfigurableFacetProvider> providersList, List<PropertyChangeListener> changeListeners) {
         for (ConfigurableFacetProvider provider : providersList) {
             Component old = properties.put(provider.getConfigurationName(), provider.getConfiguration());
             if (old != null) {
@@ -42,6 +45,7 @@ public class FacetedWorldConfigurator implements WorldConfigurator {
             }
         }
         this.providers = providersList;
+        this.changeListeners = changeListeners;
     }
 
     @Override
@@ -55,10 +59,16 @@ public class FacetedWorldConfigurator implements WorldConfigurator {
             if (key.equals(facetProvider.getConfigurationName())) {
                 facetProvider.setConfiguration(comp);
                 properties.put(key, comp);
-                return;
             }
         }
 
         logger.warn("No property {} found", key);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        for (PropertyChangeListener listener : changeListeners) {
+            listener.propertyChange(evt);
+        }
     }
 }

@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.world.generator.plugin.WorldGeneratorPluginLibrary;
 
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -218,7 +219,15 @@ public class WorldBuilder {
                 configurables.add((ConfigurableFacetProvider) facetProvider);
             }
         }
-        FacetedWorldConfigurator worldConfigurator = new FacetedWorldConfigurator(configurables);
+
+        List<PropertyChangeListener> listeners = new ArrayList<>();
+        for (FacetProvider facetProvider : providersList) {
+            if (facetProvider instanceof PropertyChangeListener) {
+                listeners.add((PropertyChangeListener) facetProvider);
+            }
+        }
+
+        FacetedWorldConfigurator worldConfigurator = new FacetedWorldConfigurator(configurables, listeners);
         return worldConfigurator;
     }
 }
