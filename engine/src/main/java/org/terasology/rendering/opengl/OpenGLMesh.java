@@ -164,6 +164,18 @@ public class OpenGLMesh extends Mesh {
         }
     }
 
+    public void doRender(String subgroup) {
+        if (isDisposed()) {
+            logger.error("Attempted to render disposed mesh: {}", getUrn());
+        } else if (!data.getGroupIds().contains(subgroup)) {
+            logger.error("Attempted to render non-existing group: {}:{}", getUrn(), subgroup);
+        } else {
+            int start = data.getGroupStart(subgroup);
+            int length = data.getGroupLength(subgroup);
+            GL11.glDrawElements(GL11.GL_TRIANGLES, length, GL_UNSIGNED_INT, start);
+        }
+    }
+
     public void doRender() {
         if (!isDisposed()) {
             GL11.glDrawElements(GL11.GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);

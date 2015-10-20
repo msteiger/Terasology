@@ -47,6 +47,8 @@ import org.terasology.network.ClientComponent;
 import org.terasology.network.NetworkSystem;
 import org.terasology.registry.In;
 import org.terasology.rendering.assets.material.Material;
+import org.terasology.rendering.assets.mesh.Mesh;
+import org.terasology.rendering.nui.Color;
 import org.terasology.rendering.opengl.OpenGLMesh;
 import org.terasology.rendering.world.WorldRenderer;
 import org.terasology.world.WorldProvider;
@@ -54,6 +56,7 @@ import org.terasology.world.WorldProvider;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import static org.lwjgl.opengl.GL11.glPopMatrix;
@@ -93,6 +96,9 @@ public class MeshRenderer extends BaseComponentSystem implements RenderSystem {
 
     private NearestSortingList opaqueMeshSorter = new NearestSortingList();
     private NearestSortingList translucentMeshSorter = new NearestSortingList();
+
+    private final FloatBuffer tempMatrixBuffer44 = BufferUtils.createFloatBuffer(16);
+    private final FloatBuffer tempMatrixBuffer33 = BufferUtils.createFloatBuffer(12);
 
     private int lastRendered;
 
@@ -180,47 +186,50 @@ public class MeshRenderer extends BaseComponentSystem implements RenderSystem {
     private void renderAlphaBlend(Iterable<EntityRef> entityRefs) {
         Vector3f cameraPosition = worldRenderer.getActiveCamera().getPosition();
 
-        FloatBuffer tempMatrixBuffer44 = BufferUtils.createFloatBuffer(16);
-        FloatBuffer tempMatrixBuffer33 = BufferUtils.createFloatBuffer(12);
-
         for (EntityRef entity : entityRefs) {
             MeshComponent meshComp = entity.getComponent(MeshComponent.class);
-            if (meshComp.material.isRenderable()) {
-                meshComp.material.enable();
-                LocationComponent location = entity.getComponent(LocationComponent.class);
-                if (location == null) {
-                    continue;
-                }
-                if (isHidden(entity, meshComp)) {
-                    continue;
-                }
+            LocationComponent location = entity.getComponent(LocationComponent.class);
+            if (location == null) {
+                continue;
+            }
 
-                Quat4f worldRot = location.getWorldRotation();
-                Vector3f worldPos = location.getWorldPosition();
-                float worldScale = location.getWorldScale();
-                AABB aabb = meshComp.mesh.getAABB().transform(worldRot, worldPos, worldScale);
-                if (worldRenderer.getActiveCamera().hasInSight(aabb)) {
-                    Vector3f worldPositionCameraSpace = new Vector3f();
-                    worldPositionCameraSpace.sub(worldPos, cameraPosition);
-                    Matrix4f matrixCameraSpace = new Matrix4f(worldRot, worldPositionCameraSpace, worldScale);
-                    Matrix4f modelViewMatrix = MatrixUtils.calcModelViewMatrix(worldRenderer.getActiveCamera().getViewMatrix(), matrixCameraSpace);
-                    MatrixUtils.matrixToFloatBuffer(modelViewMatrix, tempMatrixBuffer44);
+            if (isHidden(entity, meshComp)) {
+                continue;
+            }
 
-                    meshComp.material.setMatrix4("projectionMatrix", worldRenderer.getActiveCamera().getProjectionMatrix());
-                    meshComp.material.setMatrix4("worldViewMatrix", tempMatrixBuffer44, true);
+            Quat4f worldRot = location.getWorldRotation();
+            Vector3f worldPos = location.getWorldPosition();
+            float worldScale = location.getWorldScale();
+            AABB aabb = meshComp.mesh.getAABB().transform(worldRot, worldPos, worldScale);
+            if (worldRenderer.getActiveCamera().hasInSight(aabb)) {
+                Vector3f worldPositionCameraSpace = new Vector3f();
+                worldPositionCameraSpace.sub(worldPos, cameraPosition);
+                Matrix4f matrixCameraSpace = new Matrix4f(worldRot, worldPositionCameraSpace, worldScale);
+                Matrix4f modelViewMatrix = MatrixUtils.calcModelViewMatrix(worldRenderer.getActiveCamera().getViewMatrix(), matrixCameraSpace);
+                MatrixUtils.matrixToFloatBuffer(modelViewMatrix, tempMatrixBuffer44);
+                MatrixUtils.matrixToFloatBuffer(MatrixUtils.calcNormalMatrix(modelViewMatrix), tempMatrixBuffer33);
 
-                    MatrixUtils.matrixToFloatBuffer(MatrixUtils.calcNormalMatrix(modelViewMatrix), tempMatrixBuffer33);
-                    meshComp.material.setMatrix3("normalMatrix", tempMatrixBuffer33, true);
-                    meshComp.material.setFloat4("colorOffset", meshComp.color.rf(), meshComp.color.gf(), meshComp.color.bf(), meshComp.color.af(), true);
-                    meshComp.material.setFloat("light", worldRenderer.getRenderingLightValueAt(worldPos), true);
-                    meshComp.material.setFloat("sunlight", worldRenderer.getSunlightValueAt(worldPos), true);
-
-                    OpenGLMesh mesh = (OpenGLMesh) meshComp.mesh;
-                    meshComp.material.bindTextures();
-                    mesh.render();
-                }
+                bindMaterial(tempMatrixBuffer44, tempMatrixBuffer33, worldPos, meshComp.material, meshComp.color);
+                meshComp.mesh.render();
             }
         }
+    }
+
+    private void bindMaterial(FloatBuffer viewMatrix, FloatBuffer normalMatrix, Vector3f worldPos, Material material, Color color) {
+        if (material.isRenderable()) {
+            material.enable();
+
+            material.setMatrix4("projectionMatrix", worldRenderer.getActiveCamera().getProjectionMatrix());
+            material.setMatrix4("worldViewMatrix", viewMatrix, true);
+
+            material.setMatrix3("normalMatrix", normalMatrix, true);
+            material.setFloat4("colorOffset", color.rf(), color.gf(), color.bf(), color.af(), true);
+            material.setFloat("light", worldRenderer.getRenderingLightValueAt(worldPos), true);
+            material.setFloat("sunlight", worldRenderer.getSunlightValueAt(worldPos), true);
+
+            material.bindTextures();
+        }
+
     }
 
     @Override
@@ -245,9 +254,6 @@ public class MeshRenderer extends BaseComponentSystem implements RenderSystem {
         Quat4f worldRot = new Quat4f();
         Vector3f worldPos = new Vector3f();
         Transform transWorldSpace = new Transform();
-
-        FloatBuffer tempMatrixBuffer44 = BufferUtils.createFloatBuffer(16);
-        FloatBuffer tempMatrixBuffer33 = BufferUtils.createFloatBuffer(12);
 
         for (Material material : meshByMaterial.keySet()) {
             if (material.isRenderable()) {
@@ -305,7 +311,12 @@ public class MeshRenderer extends BaseComponentSystem implements RenderSystem {
                         material.setFloat("sunlight", worldRenderer.getSunlightValueAt(worldPos), true);
                         material.setFloat("blockLight", worldRenderer.getBlockLightValueAt(worldPos), true);
 
-                        lastMesh.doRender();
+                        if (meshComp.subMaterials != null) {
+                            String group = getIdForMaterial(material, meshComp.subMaterials);
+                            lastMesh.doRender(group);
+                        } else {
+                            lastMesh.doRender();
+                        }
                     }
                 }
                 if (lastMesh != null) {
@@ -313,6 +324,15 @@ public class MeshRenderer extends BaseComponentSystem implements RenderSystem {
                 }
             }
         }
+    }
+
+    private String getIdForMaterial(Material material, Map<String, Material> subMaterials) {
+        for (Entry<String, Material> entry : subMaterials.entrySet()) {
+            if (entry.getValue().equals(material)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     @Override

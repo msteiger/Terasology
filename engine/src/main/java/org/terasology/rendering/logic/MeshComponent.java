@@ -15,6 +15,8 @@
  */
 package org.terasology.rendering.logic;
 
+import java.util.Map;
+
 import org.terasology.entitySystem.Component;
 import org.terasology.network.Replicate;
 import org.terasology.rendering.assets.material.Material;
@@ -32,6 +34,8 @@ public final class MeshComponent implements Component {
     public Mesh mesh;
     @Replicate
     public Material material;
+    @Replicate
+    public Map<String, Material> subMaterials;
 
     // TODO: This should be a setting on the material
     @Replicate
