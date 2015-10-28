@@ -17,12 +17,18 @@
 package org.terasology.rendering.assets.mesh;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringBufferInputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.javagl.obj.Obj;
+import de.javagl.obj.ObjData;
 import de.javagl.obj.ObjReader;
+import de.javagl.obj.ObjUtils;
+import de.javagl.obj.ReadableObj;
+import de.javagl.obj.WritableObj;
 
 /**
  *
@@ -43,7 +49,7 @@ public class ObjMeshBuilderTest {
             + "g unused\n"
             + "f 2 1 3";
 
-    @Test
+//    @Test
     public void test() throws IOException {
         ObjMeshBuilder meshBuilder = new ObjMeshBuilder();
         ObjReader.read(new StringBufferInputStream(SQUARE_AND_TRIANGLE), meshBuilder);
@@ -55,5 +61,22 @@ public class ObjMeshBuilderTest {
         Assert.assertEquals(6, data.getGroupLength("group1"));
         Assert.assertEquals(0, data.getGroupStart("all"));
         Assert.assertEquals(9, data.getGroupLength("all"));
+    }
+
+    @Test
+    public void testDwarfy() throws IOException {
+        try (InputStream stream = getClass().getResourceAsStream("/assets/mesh/Dwarfy.obj")) {
+            Obj tempObj1 = ObjReader.read(stream);
+            ObjMeshBuilder meshBuilder = new ObjMeshBuilder();
+            ObjUtils.makeVertexIndexed(tempObj1, meshBuilder);
+            MeshData data = meshBuilder.getMeshData();
+            Assert.assertEquals(data.getNormals().size(), data.getVertices().size());
+        }
+    }
+
+    private static void convertToRenderable(ReadableObj input, WritableObj result) {
+        ObjUtils.makeTexCoordsUnique(input, null, result);
+        ObjUtils.makeNormalsUnique(input, null, result);
+        ObjUtils.makeVertexIndexed(input, result);
     }
 }

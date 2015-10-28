@@ -56,7 +56,7 @@ class ObjMeshBuilder extends AbstractWritableObj {
     @Override
     public void addTexCoord(FloatTuple texCoord) {
         result.getTexCoord0().add(texCoord.getX());
-        result.getTexCoord0().add(texCoord.getY());
+        result.getTexCoord0().add(1-texCoord.getY());
     }
 
     @Override
@@ -78,6 +78,10 @@ class ObjMeshBuilder extends AbstractWritableObj {
 
     @Override
     public void setActiveGroupNames(Collection<? extends String> groupNames) {
+        if (groupNames == null) {
+            return;
+        }
+
         int idx = result.getIndices().size();
 
         Collection<String> removed = new LinkedHashSet<>(activeGroups);

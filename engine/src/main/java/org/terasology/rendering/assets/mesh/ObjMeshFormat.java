@@ -15,6 +15,8 @@
  */
 package org.terasology.rendering.assets.mesh;
 
+import gnu.trove.map.TMap;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -24,7 +26,10 @@ import org.terasology.assets.format.AbstractAssetFileFormat;
 import org.terasology.assets.format.AssetDataFile;
 import org.terasology.assets.module.annotations.RegisterAssetFileFormat;
 
+import de.javagl.obj.Obj;
 import de.javagl.obj.ObjReader;
+import de.javagl.obj.ObjUtils;
+import de.javagl.obj.Objs;
 
 /**
  * Importer for Wavefront obj files. Supports core obj mesh data
@@ -42,8 +47,12 @@ public class ObjMeshFormat extends AbstractAssetFileFormat<MeshData> {
     public MeshData load(ResourceUrn urn, List<AssetDataFile> inputs) throws IOException {
         try (InputStream stream = inputs.get(0).openStream()) {
 
+            Obj tempObj1 = ObjReader.read(stream);
             ObjMeshBuilder meshBuilder = new ObjMeshBuilder();
-            ObjReader.read(stream, meshBuilder);
+            Obj result = ObjUtils.triangulate(tempObj1);
+            result = ObjUtils.makeTexCoordsUnique(result);
+            result = ObjUtils.makeNormalsUnique(result);
+            ObjUtils.makeVertexIndexed(result, meshBuilder);
             MeshData data = meshBuilder.getMeshData();
 
             if (data.getVertices() == null) {
