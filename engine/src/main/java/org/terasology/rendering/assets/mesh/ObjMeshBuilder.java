@@ -17,6 +17,11 @@
 package org.terasology.rendering.assets.mesh;
 
 import gnu.trove.list.TIntList;
+
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import de.javagl.obj.AbstractWritableObj;
 import de.javagl.obj.FloatTuple;
 import de.javagl.obj.ObjFace;
@@ -28,9 +33,20 @@ class ObjMeshBuilder extends AbstractWritableObj {
 
     private final MeshData result = new MeshData();
 
+    private final Set<String> activeGroups = new LinkedHashSet<>();
+
     public MeshData getMeshData() {
+        int idx = result.getIndices().size();
+
+        for (String group : activeGroups) {
+            result.endGroupAt(group, idx - 1);
+        }
+
+        activeGroups.clear();
+
         return result;
     }
+
 
     @Override
     public void addVertex(FloatTuple vertex) {
@@ -60,5 +76,27 @@ class ObjMeshBuilder extends AbstractWritableObj {
             indices.add(face.getVertexIndex(i + 1));
             indices.add(face.getVertexIndex(i + 2));
         }
+    }
+
+    @Override
+    public void setActiveGroupNames(Collection<? extends String> groupNames) {
+        int idx = result.getIndices().size();
+
+        Collection<String> removed = new LinkedHashSet<>(activeGroups);
+        removed.removeAll(groupNames);
+
+        Collection<String> added = new LinkedHashSet<>(groupNames);
+        added.removeAll(activeGroups);
+
+        for (String group : removed) {
+            result.endGroupAt(group, idx - 1);
+        }
+
+        for (String group : added) {
+            result.startGroupAt(group, idx);
+        }
+
+        activeGroups.clear();
+        activeGroups.addAll(groupNames);
     }
 }
