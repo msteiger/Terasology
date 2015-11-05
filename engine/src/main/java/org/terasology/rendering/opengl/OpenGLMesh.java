@@ -17,15 +17,18 @@ package org.terasology.rendering.opengl;
 
 import com.bulletphysics.linearmath.Transform;
 import com.google.common.collect.Lists;
+
 import gnu.trove.iterator.TFloatIterator;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TFloatList;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.assets.Asset;
@@ -166,7 +169,23 @@ public class OpenGLMesh extends Mesh {
 
     public void doRender() {
         if (!isDisposed()) {
-            GL11.glDrawElements(GL11.GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+            if (data.getGroupIds().size() < 2) {
+                GL11.glDrawElements(GL11.GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
+            } else {
+                try {
+
+                int start = data.getGroupStart("PlainFaces");
+                int len = data.getGroupLength("PlainFaces");
+                GL11.glDrawElements(GL11.GL_TRIANGLES, len, GL_UNSIGNED_INT, start);
+
+                GL20.glUniform3f(1, 0.2f, 0.2f, 0.2f);
+                start = data.getGroupStart("Bevels") * 4;
+                len = data.getGroupLength("Bevels");
+                GL11.glDrawElements(GL11.GL_TRIANGLES, len, GL_UNSIGNED_INT, start);
+                } catch (Exception e) {
+                    logger.warn(e.toString());
+                }
+            }
         } else {
             logger.error("Attempted to render disposed mesh: {}", getUrn());
         }

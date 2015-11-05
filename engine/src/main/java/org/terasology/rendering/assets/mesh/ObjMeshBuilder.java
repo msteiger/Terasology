@@ -80,6 +80,10 @@ class ObjMeshBuilder extends AbstractWritableObj {
 
     @Override
     public void setActiveGroupNames(Collection<? extends String> groupNames) {
+        if (groupNames == null) { // TODO: this should become obsolete with Obj 0.2.2
+            return;
+        }
+
         int idx = result.getIndices().size();
 
         Collection<String> removed = new LinkedHashSet<>(activeGroups);
