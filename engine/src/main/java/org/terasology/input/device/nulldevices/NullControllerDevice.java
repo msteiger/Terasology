@@ -17,6 +17,8 @@
 package org.terasology.input.device.nulldevices;
 
 import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.List;
 import java.util.Queue;
 
 import org.terasology.input.ControllerDevice;
@@ -32,4 +34,8 @@ public class NullControllerDevice implements ControllerDevice {
         return new ArrayDeque<>();
     }
 
+    @Override
+    public List<String> getControllers() {
+        return Collections.emptyList();
+    }
 }

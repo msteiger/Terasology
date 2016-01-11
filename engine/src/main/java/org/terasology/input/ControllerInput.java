@@ -19,7 +19,7 @@ package org.terasology.input;
 import java.util.Locale;
 
 /**
- * TODO Type description
+ * Input information from controllers.
  */
 public enum ControllerInput implements Input {
 
@@ -27,19 +27,26 @@ public enum ControllerInput implements Input {
 
     X_AXIS(InputType.CONTROLLER_AXIS, ControllerId.X_AXIS, "X_AXIS", "X-Axis"),
     Y_AXIS(InputType.CONTROLLER_AXIS, ControllerId.Y_AXIS, "Y_AXIS", "Y-Axis"),
+    Z_AXIS(InputType.CONTROLLER_AXIS, ControllerId.Z_AXIS, "Z_AXIS", "Z-Axis"),
 
-    CONTROLLER_0(InputType.CONTROLLER_BUTTON, ControllerId.ZERO, "CONTROLLER_0", "Controller Button 0"),
-    CONTROLLER_1(InputType.CONTROLLER_BUTTON, ControllerId.ONE, "CONTROLLER_1", "Controller Button 1"),
-    CONTROLLER_2(InputType.CONTROLLER_BUTTON, ControllerId.TWO, "CONTROLLER_2", "Controller Button 2"),
-    CONTROLLER_3(InputType.CONTROLLER_BUTTON, ControllerId.THREE, "CONTROLLER_3", "Controller Button 3"),
-    CONTROLLER_4(InputType.CONTROLLER_BUTTON, ControllerId.FOUR, "CONTROLLER_4", "Controller Button 4"),
-    CONTROLLER_5(InputType.CONTROLLER_BUTTON, ControllerId.FIVE, "CONTROLLER_5", "Controller Button 5"),
-    CONTROLLER_6(InputType.CONTROLLER_BUTTON, ControllerId.SIX, "CONTROLLER_6", "Controller Button 6"),
-    CONTROLLER_7(InputType.CONTROLLER_BUTTON, ControllerId.SEVEN, "CONTROLLER_7", "Controller Button 7"),
-    CONTROLLER_8(InputType.CONTROLLER_BUTTON, ControllerId.EIGHT, "CONTROLLER_8", "Controller Button 8"),
-    CONTROLLER_9(InputType.CONTROLLER_BUTTON, ControllerId.NINE, "CONTROLLER_9", "Controller Button 9"),
-    CONTROLLER_10(InputType.CONTROLLER_BUTTON, ControllerId.TEN, "CONTROLLER_10", "Controller Button 10"),
-    CONTROLLER_11(InputType.CONTROLLER_BUTTON, ControllerId.ELEVEN, "CONTROLLER_11", "Controller Button 11");
+    RX_AXIS(InputType.CONTROLLER_AXIS, ControllerId.RX_AXIS, "RX_AXIS", "Rotational X-Axis"),
+    RY_AXIS(InputType.CONTROLLER_AXIS, ControllerId.RY_AXIS, "RY_AXIS", "Rotational Y-Axis"),
+
+    POVX_AXIS(InputType.CONTROLLER_AXIS, ControllerId.POVX_AXIS, "POVX_AXIS", "Point-of-View X-Axis"),
+    POVY_AXIS(InputType.CONTROLLER_AXIS, ControllerId.POVY_AXIS, "POVY_AXIS", "Point-of-View Y-Axis"),
+
+    BUTTON_0(InputType.CONTROLLER_BUTTON, ControllerId.ZERO, "BUTTON_0", "Controller Button 0"),
+    BUTTON_1(InputType.CONTROLLER_BUTTON, ControllerId.ONE, "BUTTON_1", "Controller Button 1"),
+    BUTTON_2(InputType.CONTROLLER_BUTTON, ControllerId.TWO, "BUTTON_2", "Controller Button 2"),
+    BUTTON_3(InputType.CONTROLLER_BUTTON, ControllerId.THREE, "BUTTON_3", "Controller Button 3"),
+    BUTTON_4(InputType.CONTROLLER_BUTTON, ControllerId.FOUR, "BUTTON_4", "Controller Button 4"),
+    BUTTON_5(InputType.CONTROLLER_BUTTON, ControllerId.FIVE, "BUTTON_5", "Controller Button 5"),
+    BUTTON_6(InputType.CONTROLLER_BUTTON, ControllerId.SIX, "BUTTON_6", "Controller Button 6"),
+    BUTTON_7(InputType.CONTROLLER_BUTTON, ControllerId.SEVEN, "BUTTON_7", "Controller Button 7"),
+    BUTTON_8(InputType.CONTROLLER_BUTTON, ControllerId.EIGHT, "BUTTON_8", "Controller Button 8"),
+    BUTTON_9(InputType.CONTROLLER_BUTTON, ControllerId.NINE, "BUTTON_9", "Controller Button 9"),
+    BUTTON_10(InputType.CONTROLLER_BUTTON, ControllerId.TEN, "BUTTON_10", "Controller Button 10"),
+    BUTTON_11(InputType.CONTROLLER_BUTTON, ControllerId.ELEVEN, "BUTTON_11", "Controller Button 11");
 
     private int id;
     private String displayName;

@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 
 import org.terasology.config.BindsConfig;
 import org.terasology.config.Config;
+import org.terasology.config.ControllerConfig.ControllerInfo;
 import org.terasology.engine.SimpleUri;
 import org.terasology.engine.Time;
 import org.terasology.engine.module.ModuleManager;
@@ -126,6 +127,10 @@ public class InputSystem extends BaseComponentSystem {
         return keyboard;
     }
 
+    public ControllerDevice getControllerDevice() {
+        return controllers;
+    }
+
     public void setControllerDevice(ControllerDevice controllerDevice) {
         this.controllers = controllerDevice;
     }
@@ -154,6 +159,7 @@ public class InputSystem extends BaseComponentSystem {
         axisBinds.clear();
         keyBinds.clear();
         controllerBinds.clear();
+        controllerAxisBinds.clear();
         mouseButtonBinds.clear();
         mouseWheelUpBind = null;
         mouseWheelDownBind = null;
@@ -404,7 +410,12 @@ public class InputSystem extends BaseComponentSystem {
             } else if (input.getType() == InputType.CONTROLLER_AXIS) {
                 BindableRealAxis axis = controllerAxisBinds.get(input);
                 if (axis != null) {
-                    axis.setTargetValue(action.getAxisValue());
+                    ControllerInfo info = config.getInput().getControllers().getController(action.getController());
+                    boolean isX = action.getInput().getId() == ControllerId.X_AXIS;
+                    boolean isY = action.getInput().getId() == ControllerId.Y_AXIS;
+                    boolean isZ = action.getInput().getId() == ControllerId.Z_AXIS;
+                    float f = (isX && info.isInvertX() || isY && info.isInvertY() || isZ && info.isInvertZ()) ? -1 : 1;
+                    axis.setTargetValue(action.getAxisValue() * f);
                 }
             }
         }

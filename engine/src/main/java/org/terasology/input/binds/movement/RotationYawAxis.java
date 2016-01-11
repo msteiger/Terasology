@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 MovingBlocks
+ * Copyright 2013 MovingBlocks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,17 @@
 
 package org.terasology.input.binds.movement;
 
-import org.terasology.input.BindButtonEvent;
+import org.terasology.input.BindAxisEvent;
 import org.terasology.input.ControllerId;
 import org.terasology.input.DefaultBinding;
 import org.terasology.input.InputType;
-import org.terasology.input.Keyboard;
-import org.terasology.input.RegisterBindButton;
+import org.terasology.input.RegisterRealBindAxis;
+import org.terasology.input.SendEventMode;
 
 /**
+ * Relates to the horizontal screen axis, i.e. look left/right.
  */
-@RegisterBindButton(id = "jump", description = "Jump / Ascend", repeating = false)
-@DefaultBinding(type = InputType.KEY, id = Keyboard.KeyId.SPACE)
-@DefaultBinding(type = InputType.CONTROLLER_BUTTON, id = ControllerId.TWO)
-public class JumpButton extends BindButtonEvent {
+@RegisterRealBindAxis(id = "rotationYaw", eventMode = SendEventMode.WHEN_NON_ZERO)
+@DefaultBinding(type = InputType.CONTROLLER_AXIS, id = ControllerId.RX_AXIS)
+public class RotationYawAxis extends BindAxisEvent {
 }
