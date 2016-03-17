@@ -342,7 +342,7 @@ public class JoinGameScreen extends CoreScreenLayer {
             downloadLabel.bindText(new ReadOnlyBinding<String>() {
                 @Override
                 public String get() {
-                    return downloader.getStatus();
+                    return translationSystem.translate(downloader.getStatus());
                 }
             });
         }

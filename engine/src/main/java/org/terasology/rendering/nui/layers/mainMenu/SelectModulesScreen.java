@@ -361,14 +361,14 @@ public class SelectModulesScreen extends CoreScreenLayer {
             modulesToDownload = getModulesRequiredToDownloadFor(moduleMetadata);
         } catch (DependencyResolutionFailed e) {
             MessagePopup messagePopup = getManager().pushScreen(MessagePopup.ASSET_URI, MessagePopup.class);
-            messagePopup.setMessage("Depedency resolution failed", e.getMessage());
+            messagePopup.setMessage(translationSystem.translate("${engine:selectModules#dependency-resolution-failed}"), e.getMessage());
             return;
         }
 
         Map<URL, Path> urlToTargetMap = determineDownloadUrlsFor(modulesToDownload);
 
         ConfirmPopup confirmPopup = getManager().pushScreen(ConfirmPopup.ASSET_URI, ConfirmPopup.class);
-        confirmPopup.setMessage("Confirm Download", modulesToDownload.size()  + " modules will be downloaded");
+        confirmPopup.setMessage(translationSystem.translate("${engine:selectModules#confirm-download}"), String.format(translationSystem.translate("${engine:selectModules#n-modules-will-be-downloaded}"),modulesToDownload.size()));
         confirmPopup.setOkHandler(() -> downloadModules(urlToTargetMap));
     }
 
@@ -390,7 +390,7 @@ public class SelectModulesScreen extends CoreScreenLayer {
                 }
             });
         ProgressListener progressListener = progress ->
-                popup.setMessage("Downloading required modules", String.format("Please wait ... %d%%", (int) (progress * 100f)));
+                popup.setMessage(translationSystem.translate("${engine:selectModules#downloading-required-modules}"), translationSystem.translate("${engine:menu#please-wait}") + String.format("\n%d%%", (int) (progress * 100f)));
         // to ensure that the initial message gets set:
         progressListener.onProgress(0);
         MultiFileDownloader operation = new MultiFileDownloader(urlToTargetMap, progressListener);
